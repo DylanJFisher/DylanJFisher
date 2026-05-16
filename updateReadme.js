@@ -36,7 +36,7 @@ function readWriteAsync() {
                     if (err) throw err;
 
                     const updatedMd = data.replace(
-                        /(## Latest Articles[\s\S]*?)(<!-- PROJECT-LIST:START -->[\s\S]*?<!-- PROJECT-LIST:END -->)/m,
+                        /(## Latest Projects[\s\S]*?)(<!-- PROJECT-LIST:START -->[\s\S]*?<!-- PROJECT-LIST:END -->)/m,
                         `$1<!-- PROJECT-LIST:START -->\n${repos}<!-- PROJECT-LIST:END -->`
                     );
 
