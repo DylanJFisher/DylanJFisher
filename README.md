@@ -3,6 +3,8 @@
 ## Latest Projects
 
 <!-- PROJECT-LIST:START -->
+
+- [DylanJFisher](https://github.com/DylanJFisher/DylanJFisher)
 - [Snake-Extension](https://github.com/DylanJFisher/Snake-Extension)
 <!-- PROJECT-LIST:END -->
 
