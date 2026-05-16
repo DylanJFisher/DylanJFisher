@@ -3,6 +3,9 @@ const https = require('https');
 
 const url = 'https://api.github.com/users/DylanJFisher/repos';
 
+// name of the repo you want to exclude (adjust if needed)
+const EXCLUDED_REPO = 'DylanJFisher';
+
 function readWriteAsync() {
     https.get(url, {
         headers: { 'User-Agent': 'node.js' }
@@ -16,7 +19,6 @@ function readWriteAsync() {
             try {
                 body = JSON.parse(body);
 
-                // Safety check (GitHub errors are objects, not arrays)
                 if (!Array.isArray(body)) {
                     console.error('GitHub API error:', body.message || body);
                     return process.exit(1);
@@ -25,7 +27,7 @@ function readWriteAsync() {
                 const repos =
                     '\n' +
                     body
-                        .filter(repo => !repo.fork)
+                        .filter(repo => !repo.fork && repo.name !== EXCLUDED_REPO)
                         .map(repo => `- [${repo.name}](${repo.html_url})`)
                         .join('\n') +
                     '\n';
