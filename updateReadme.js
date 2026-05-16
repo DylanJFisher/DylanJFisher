@@ -2,12 +2,16 @@
 const fs = require('fs');
 const https = require('https');
 
-// API endpoint
-const url = 'https://dev.to/api/articles?username=DylanJFisher';
+// GitHub API endpoint (all repos for user)
+const url = 'https://api.github.com/users/DylanJFisher/repos';
 
 function readWriteAsync() {
-    // Get articles using HTTPS
-    https.get(url, (res) => {
+    // Get repositories using HTTPS
+    https.get(url, {
+        headers: {
+            'User-Agent': 'node.js'
+        }
+    }, (res) => {
         res.setEncoding('utf8');
 
         // Store response data
@@ -22,14 +26,11 @@ function readWriteAsync() {
                 // Parse JSON response
                 body = JSON.parse(body);
 
-                // Get latest 3 articles
-                body = body.slice(0, 3);
-
-                // Create markdown list
-                const articles =
+                // Create markdown list of ALL repositories
+                const repos =
                     '\n' +
                     body
-                        .map(article => `- [${article.title}](${article.url})`)
+                        .map(repo => `- [${repo.name}](${repo.html_url})`)
                         .join('\n') +
                     '\n';
 
@@ -41,8 +42,8 @@ function readWriteAsync() {
 
                     // Replace section between markers
                     const updatedMd = data.replace(
-                        /(<!-- BLOG-POST-LIST:START -->)([\s\S]*?)(<!-- BLOG-POST-LIST:END -->)/m,
-                        `$1${articles}$3`
+                        /(<!-- PROJECT-LIST:START -->)([\s\S]*?)(<!-- PROJECT-LIST:END -->)/m,
+                        `$1${repos}$3`
                     );
 
                     // Write updated README
@@ -55,7 +56,7 @@ function readWriteAsync() {
                     });
                 });
             } catch (err) {
-                console.error('Failed to process articles:', err);
+                console.error('Failed to process repositories:', err);
                 process.exit(1);
             }
         });

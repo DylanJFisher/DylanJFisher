@@ -6,9 +6,9 @@ The text below will be updated automatically.
 
 ## Latest Articles
 
-<!-- BLOG-POST-LIST:START -->
+<!-- PROJECT-LIST:START -->
 - Placeholder
-<!-- BLOG-POST-LIST:END -->
+<!-- PROJECT-LIST:END -->
 
 ![Build README](https://github.com/DylanJFisher/DylanJFisher/actions/workflows/build-readme.yml/badge.svg)
 
