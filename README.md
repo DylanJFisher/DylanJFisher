@@ -1,15 +1,15 @@
 # Self-updating README
 
-This text won't be change.
+This text won't be changed.
 
-The text below will be, though!
+The text below will be updated automatically.
 
-What I'm writing:
+## Latest Articles
 
-- This will be replaced
-- This too!
-- This three!
+<!-- BLOG-POST-LIST:START -->
+- Placeholder
+<!-- BLOG-POST-LIST:END -->
 
-![Build README](https://github.com/DylanJFisher/DylanJFisher/workflows/Build%20README/badge.svg)
+![Build README](https://github.com/DylanJFisher/DylanJFisher/actions/workflows/build-readme.yml/badge.svg)
 
-This won't be impacted either. The text above is a GitHub build badge.
+This text will not be modified.

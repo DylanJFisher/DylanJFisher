@@ -10,7 +10,7 @@ function readWriteAsync() {
     https.get(url, (res) => {
         res.setEncoding('utf8');
 
-        // Set variable body to response data from API
+        // Store response data
         let body = '';
 
         res.on('data', (data) => {
@@ -19,34 +19,34 @@ function readWriteAsync() {
 
         res.on('end', () => {
             try {
-                // Parse the JSON response
+                // Parse JSON response
                 body = JSON.parse(body);
 
-                // Shorten array to latest 3 articles
+                // Get latest 3 articles
                 body = body.slice(0, 3);
 
-                // Create markdown list dynamically
+                // Create markdown list
                 const articles =
                     '\n' +
                     body
                         .map(article => `- [${article.title}](${article.url})`)
                         .join('\n') +
-                    '\n\n';
+                    '\n';
 
-                // Update README using FS
-                fs.readFile('README.md', 'utf-8', (err, data) => {
+                // Read README
+                fs.readFile('README.md', 'utf8', (err, data) => {
                     if (err) {
                         throw err;
                     }
 
-                    // Replace content between markers
+                    // Replace section between markers
                     const updatedMd = data.replace(
-                        /(?<=What I'm writing:\n\n)[\s\S]*?(?=\n!\[Build README\])/m,
-                        articles
+                        /(<!-- BLOG-POST-LIST:START -->)([\s\S]*?)(<!-- BLOG-POST-LIST:END -->)/m,
+                        `$1${articles}$3`
                     );
 
-                    // Write the new README
-                    fs.writeFile('README.md', updatedMd, 'utf-8', (err) => {
+                    // Write updated README
+                    fs.writeFile('README.md', updatedMd, 'utf8', (err) => {
                         if (err) {
                             throw err;
                         }
@@ -56,12 +56,14 @@ function readWriteAsync() {
                 });
             } catch (err) {
                 console.error('Failed to process articles:', err);
+                process.exit(1);
             }
         });
     }).on('error', (err) => {
         console.error('HTTPS request failed:', err);
+        process.exit(1);
     });
 }
 
-// Call the function
+// Run function
 readWriteAsync();
