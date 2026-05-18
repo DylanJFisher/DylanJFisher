@@ -4,7 +4,6 @@
 
 <!-- PROJECT-LIST:START -->
 
-- [Snake-Extension](https://github.com/DylanJFisher/Snake-Extension)
 <!-- PROJECT-LIST:END -->
 
 ![Build README](https://github.com/DylanJFisher/DylanJFisher/actions/workflows/build-readme.yml/badge.svg)
