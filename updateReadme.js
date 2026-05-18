@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 const WIDTH = 20;
 const HEIGHT = 10;
 
@@ -10,6 +8,8 @@ let snake = [
 ];
 
 let direction = 'RIGHT';
+let score = 0;
+let gameSpeed = 150;
 
 let food = spawnFood();
 
@@ -48,11 +48,15 @@ function moveSnake() {
             break;
     }
 
-    // Wall wrap
-    if (head.x < 0) head.x = WIDTH - 1;
-    if (head.x >= WIDTH) head.x = 0;
-    if (head.y < 0) head.y = HEIGHT - 1;
-    if (head.y >= HEIGHT) head.y = 0;
+    // Wall collision
+    if (
+        head.x < 0 ||
+        head.x >= WIDTH ||
+        head.y < 0 ||
+        head.y >= HEIGHT
+    ) {
+        gameOver();
+    }
 
     // Self collision
     if (
@@ -60,17 +64,21 @@ function moveSnake() {
             segment => segment.x === head.x && segment.y === head.y
         )
     ) {
-        console.clear();
-        render();
-        console.log('\nGame Over!');
-        process.exit();
+        gameOver();
     }
 
     snake.unshift(head);
 
     // Food collision
     if (head.x === food.x && head.y === food.y) {
+        score++;
         food = spawnFood();
+
+        // Speed up slightly every food
+        if (gameSpeed > 50) {
+            gameSpeed -= 5;
+            restartLoop();
+        }
     } else {
         snake.pop();
     }
@@ -79,8 +87,11 @@ function moveSnake() {
 function render() {
     const board = [];
 
+    // Top border
+    board.push('#'.repeat(WIDTH * 2 + 3));
+
     for (let y = 0; y < HEIGHT; y++) {
-        const row = [];
+        const row = ['#'];
 
         for (let x = 0; x < WIDTH; x++) {
             if (food.x === x && food.y === y) {
@@ -97,15 +108,23 @@ function render() {
             ) {
                 row.push('o');
             } else {
-                row.push('.');
+                row.push(' ');
             }
+
+            row.push(' ');
         }
 
-        board.push(row.join(' '));
+        row.push('#');
+
+        board.push(row.join(''));
     }
 
+    // Bottom border
+    board.push('#'.repeat(WIDTH * 2 + 3));
+
     console.log(board.join('\n'));
-    console.log('\nUse WASD to move');
+    console.log(`\nScore: ${score}`);
+    console.log('Controls: WASD');
 }
 
 function gameLoop() {
@@ -115,11 +134,30 @@ function gameLoop() {
     render();
 }
 
+function gameOver() {
+    console.clear();
+    render();
+
+    console.log('\nGAME OVER');
+    console.log(`Final Score: ${score}`);
+
+    process.exit();
+}
+
+let loop = setInterval(gameLoop, gameSpeed);
+
+function restartLoop() {
+    clearInterval(loop);
+    loop = setInterval(gameLoop, gameSpeed);
+}
+
 process.stdin.setRawMode(true);
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
 
 process.stdin.on('data', (key) => {
+    key = key.toLowerCase();
+
     if (key === '\u0003') {
         process.exit();
     }
@@ -143,5 +181,3 @@ process.stdin.on('data', (key) => {
 
 console.clear();
 render();
-
-setInterval(gameLoop, 150);
